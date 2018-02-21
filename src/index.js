@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 import registerServiceWorker from "./registerServiceWorker";
-import { createStore } from 'redux';
-import todoApp from './reducers/reducers';
-import { render } from 'react-dom';
-import { Provider } from 'react-redux';
-import { loadState, saveState } from './localStorage'; 
-import App from './components/App';
+import { createStore } from "redux";
+import todoApp from "./reducers/reducers";
+import { render } from "react-dom";
+import { Provider } from "react-redux";
+import { loadState, saveState } from "./localStorage";
+import App from "./components/App";
 
 const initialState = loadState();
 
@@ -19,7 +19,7 @@ render(
   <Provider store={store}>
     <App />
   </Provider>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 registerServiceWorker();
