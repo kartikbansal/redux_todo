@@ -1,17 +1,19 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
-const Link = ({onClick, children, active}) => {
-  if(active) {
+const Link = ({ onClick, children, active }) => {
+  if (active) {
     return <span>{children}</span>;
   }
-  
+
   return (
-    <a href=""
-      onClick={(e) => {
+    <a
+      href=""
+      onClick={e => {
         e.preventDefault();
         onClick();
-      }}>
+      }}
+    >
       {children}
     </a>
   );
