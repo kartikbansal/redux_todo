@@ -1,21 +1,53 @@
 import { createStore } from "redux";
 import todoApp from "./reducers/index";
-import { loadState, saveState } from "./localStorage";
-import throttle from "lodash/throttle";
+// import { loadState, saveState } from "./localStorage";
+// import throttle from "lodash/throttle";
+
+const addPromiseSupportToDispatch = store => {
+  const rawDispatch = store.dispatch;
+  return action => {
+    if (typeof action.then === "function") {
+      //console.log(action);
+      return action.then(rawDispatch);
+    }
+    return rawDispatch(action);
+  };
+};
+
+const addLoggingToDispatch = store => {
+  const rawDispatch = store.dispatch;
+  if (!console.group) {
+    return rawDispatch;
+  }
+  return action => {
+    console.group(action.type);
+    console.log("%c prev state", "color: gray", store.getState());
+    console.log("%c action", "color: blue", action);
+    const returnValue = rawDispatch(action);
+    console.log("%c next state", "color: green", store.getState());
+    console.groupEnd(action.type);
+    return returnValue;
+  };
+};
 
 const configureStore = () => {
-  const initialState = loadState();
+  // const initialState = loadState();
 
-  const store = createStore(todoApp, initialState);
+  // const store = createStore(todoApp, initialState);
+  const store = createStore(todoApp);
+  store.dispatch = addPromiseSupportToDispatch(store);
+  if (process.env.NODE_ENV !== "production") {
+    store.dispatch = addLoggingToDispatch(store);
+  }
 
-  store.subscribe(
-    throttle(() => {
-      saveState({
-        todos: store.getState().todos
-      });
-    }),
-    1000
-  );
+  // store.subscribe(
+  //   throttle(() => {
+  //     saveState({
+  //       todos: store.getState().todos
+  //     });
+  //   }),
+  //   1000
+  // );
 
   return store;
 };
